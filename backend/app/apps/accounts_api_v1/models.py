@@ -24,7 +24,7 @@ class User(AbstractBaseUser):
     )
     email = models.EmailField(max_length=255, verbose_name='email', unique=True)
 
-    is_active = models.BooleanField(default=True, verbose_name='is active')
+    is_active = models.BooleanField(default=False, verbose_name='is active')
     is_staff = models.BooleanField(default=False, verbose_name='is staff')
     is_admin = models.BooleanField(default=False, verbose_name='is admin')
     created = models.DateTimeField(default=timezone.now, verbose_name='created')

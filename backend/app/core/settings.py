@@ -150,9 +150,19 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {
         'user': 'apps.accounts_api_v1.serializers.CustomUserSerializer',
         'current_user': 'apps.accounts_api_v1.serializers.CustomUserSerializer',
         'user_create': 'apps.accounts_api_v1.serializers.CustomUserCreateSerializer',
     },
 }
+
+EMAIL_HOST = str(os.getenv('EMAIL_HOST'))
+EMAIL_HOST_USER = str(os.getenv('EMAIL_HOST_USER'))
+EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_HOST_PASSWORD'))
+EMAIL_PORT = str(os.getenv('EMAIL_PORT'))
+EMAIL_USE_TLS = str(os.getenv('EMAIL_USE_TLS', 'False')) == 'True'
