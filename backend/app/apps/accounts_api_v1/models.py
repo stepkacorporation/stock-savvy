@@ -5,14 +5,20 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser
 
 from .manager import UserManager
+from .validators import validate_username
 
 
 class User(AbstractBaseUser):
+    """
+    Custom user model.
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, verbose_name='ID')
     username = models.CharField(
         max_length=20,
         verbose_name='username',
         unique=True,
+        validators=[validate_username],
         help_text='Enter a username containing 4-20 characters. It can only contain letters,'
                   ' hyphens, and underscores.'
     )
@@ -36,3 +42,6 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return self.is_admin or (self.is_active and self.is_staff)
+
+    class Meta:
+        ordering = ('username',)

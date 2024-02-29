@@ -19,7 +19,7 @@ from django.urls import path, include
 
 urlpatterns_api_v1 = [
     path('', include('apps.stocks_api_v1.urls')),
-    path('accounts/', include('apps.accounts_api_v1.urls')),
+    path('auth/', include('apps.accounts_api_v1.urls')),
 ]
 
 urlpatterns = [

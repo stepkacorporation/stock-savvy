@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
 
     'apps.accounts_api_v1.apps.AccountsApiV1Config',
     'apps.stocks_api_v1.apps.StocksApiV1Config',
@@ -131,3 +133,26 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts_api_v1.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user': 'apps.accounts_api_v1.serializers.CustomUserSerializer',
+        'current_user': 'apps.accounts_api_v1.serializers.CustomUserSerializer',
+        'user_create': 'apps.accounts_api_v1.serializers.CustomUserCreateSerializer',
+    },
+}
