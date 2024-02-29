@@ -20,7 +20,7 @@ class User(AbstractBaseUser):
         unique=True,
         validators=[validate_username],
         help_text='Enter a username containing 4-20 characters. It can only contain letters,'
-                  ' hyphens, and underscores.'
+                  ' hyphens, and digits.'
     )
     email = models.EmailField(max_length=255, verbose_name='email', unique=True)
 
