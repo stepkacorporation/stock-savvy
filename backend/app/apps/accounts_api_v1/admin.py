@@ -11,12 +11,16 @@ admin.site.unregister(Group)
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
+    """
+    The user's admin panel.
+    """
+
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
 
     list_display = ('username', 'email', 'is_staff')
     list_display_links = ('username', 'email')
-    list_filter = ('is_active', 'is_admin')
+    list_filter = ('is_active', 'is_staff', 'is_admin')
     search_fields = ('username', 'email')
     readonly_fields = ('id',)
     filter_horizontal = ()
@@ -29,7 +33,7 @@ class UserAdmin(UserAdmin):
             'fields': ('password',),
         }),
         ('Other Info', {
-            'fields': ('is_active', 'is_staff', 'is_admin', 'created'),
+            'fields': ('is_active', 'is_staff', 'is_admin', 'last_login', 'created'),
         }),
     )
     add_fieldsets = (
@@ -40,6 +44,6 @@ class UserAdmin(UserAdmin):
             'fields': ('password1', 'password2'),
         }),
         ('Other Info', {
-            'fields': ('is_active', 'is_staff', 'is_admin', 'created'),
+            'fields': ('is_active', 'is_staff', 'is_admin', 'last_login', 'created'),
         }),
     )
