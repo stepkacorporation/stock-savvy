@@ -74,18 +74,18 @@ class Stock(models.Model):
     )
     prevprice = models.DecimalField(
         default=0,
-        max_digits=10,
-        decimal_places=7,
+        max_digits=18,
+        decimal_places=9,
         verbose_name='prevprice',
         help_text='The price of the last trade of the previous day.',
     )
-    lotsize = models.PositiveSmallIntegerField(
+    lotsize = models.PositiveIntegerField(
         verbose_name='lotsize',
         help_text='The number of securities in one standard lot.',
     )
     facevalue = models.DecimalField(
-        max_digits=20,
-        decimal_places=15,
+        max_digits=34,
+        decimal_places=17,
         verbose_name='facevalue',
         help_text='The nominal value of one security at the current date.',
     )
@@ -108,8 +108,8 @@ class Stock(models.Model):
                   'It is used to format the values of fields with the DECIMAL type.',
     )
     minstep = models.DecimalField(
-        max_digits=10,
-        decimal_places=7,
+        max_digits=18,
+        decimal_places=9,
         verbose_name='min step',
         help_text='The minimum possible difference between the prices'
                   ' indicated in the bids for the purchase/sale of securities',
@@ -132,8 +132,8 @@ class Stock(models.Model):
     )
     prevlegalcloseprice = models.DecimalField(
         default=0,
-        max_digits=10,
-        decimal_places=7,
+        max_digits=18,
+        decimal_places=9,
         verbose_name='prev legal close price',
         help_text="The official closing price of the previous day, calculated in "
                   "accordance with the trading rules as the weighted average price "
