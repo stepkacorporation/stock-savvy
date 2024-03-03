@@ -59,7 +59,7 @@ class Stock(models.Model):
         SECOND = 2, 'Second'
         THIRD = 3, 'Third'
 
-    ticker = models.CharField(max_length=10, verbose_name='ticker', help_text='The ticker of the stock.')
+    ticker = models.CharField(max_length=10, verbose_name='ticker', help_text='The ticker of the stock.', unique=True)
     shortname = models.CharField(
         max_length=50,
         verbose_name='short name',
@@ -74,8 +74,8 @@ class Stock(models.Model):
     )
     prevprice = models.DecimalField(
         default=0,
-        max_digits=18,
-        decimal_places=9,
+        max_digits=20,
+        decimal_places=10,
         verbose_name='prevprice',
         help_text='The price of the last trade of the previous day.',
     )
@@ -108,8 +108,8 @@ class Stock(models.Model):
                   'It is used to format the values of fields with the DECIMAL type.',
     )
     minstep = models.DecimalField(
-        max_digits=18,
-        decimal_places=9,
+        max_digits=20,
+        decimal_places=10,
         verbose_name='min step',
         help_text='The minimum possible difference between the prices'
                   ' indicated in the bids for the purchase/sale of securities',
@@ -132,8 +132,8 @@ class Stock(models.Model):
     )
     prevlegalcloseprice = models.DecimalField(
         default=0,
-        max_digits=18,
-        decimal_places=9,
+        max_digits=20,
+        decimal_places=10,
         verbose_name='prev legal close price',
         help_text="The official closing price of the previous day, calculated in "
                   "accordance with the trading rules as the weighted average price "
@@ -163,7 +163,7 @@ class Stock(models.Model):
     updated = models.DateTimeField(auto_now=True, verbose_name='updated')
 
     def __str__(self):
-        return f'{self.shortname} ({self.ticker}) {self.prevprice}{self.currencyid}'
+        return f'{self.shortname} ({self.ticker}) {self.prevprice} {self.currencyid}'
 
     class Meta:
         ordering = ('ticker',)
@@ -178,38 +178,38 @@ class Candle(models.Model):
 
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name='candles', verbose_name='stock ID')
     open = models.DecimalField(
-        max_digits=10,
-        decimal_places=7,
+        max_digits=20,
+        decimal_places=10,
         verbose_name='open',
         help_text='The opening price.',
     )
     close = models.DecimalField(
-        max_digits=10,
-        decimal_places=7,
+        max_digits=20,
+        decimal_places=10,
         verbose_name='close',
         help_text='The closing price.',
     )
     high = models.DecimalField(
-        max_digits=10,
-        decimal_places=7,
+        max_digits=20,
+        decimal_places=10,
         verbose_name='high',
         help_text='The highest price.',
     )
     low = models.DecimalField(
-        max_digits=10,
-        decimal_places=7,
+        max_digits=20,
+        decimal_places=10,
         verbose_name='low',
         help_text='The lowest price.',
     )
     value = models.DecimalField(
         max_digits=20,
-        decimal_places=7,
+        decimal_places=10,
         verbose_name='value',
         help_text='The total value of trades during the candle period.',
     )
     volume = models.DecimalField(
         max_digits=20,
-        decimal_places=7,
+        decimal_places=10,
         verbose_name='volume',
         help_text='The total volume of trades during the candle period.',
     )
