@@ -178,38 +178,38 @@ class Candle(models.Model):
 
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name='candles', verbose_name='stock ID')
     open = models.DecimalField(
-        max_digits=20,
-        decimal_places=10,
+        max_digits=36,
+        decimal_places=18,
         verbose_name='open',
         help_text='The opening price.',
     )
     close = models.DecimalField(
-        max_digits=20,
-        decimal_places=10,
+        max_digits=36,
+        decimal_places=18,
         verbose_name='close',
         help_text='The closing price.',
     )
     high = models.DecimalField(
-        max_digits=20,
-        decimal_places=10,
+        max_digits=36,
+        decimal_places=18,
         verbose_name='high',
         help_text='The highest price.',
     )
     low = models.DecimalField(
-        max_digits=20,
-        decimal_places=10,
+        max_digits=36,
+        decimal_places=18,
         verbose_name='low',
         help_text='The lowest price.',
     )
     value = models.DecimalField(
-        max_digits=20,
-        decimal_places=10,
+        max_digits=36,
+        decimal_places=18,
         verbose_name='value',
         help_text='The total value of trades during the candle period.',
     )
     volume = models.DecimalField(
-        max_digits=20,
-        decimal_places=10,
+        max_digits=36,
+        decimal_places=18,
         verbose_name='volume',
         help_text='The total volume of trades during the candle period.',
     )
