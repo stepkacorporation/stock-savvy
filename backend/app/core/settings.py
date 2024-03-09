@@ -166,3 +166,63 @@ EMAIL_HOST_USER = str(os.getenv('EMAIL_HOST_USER'))
 EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_HOST_PASSWORD'))
 EMAIL_PORT = str(os.getenv('EMAIL_PORT'))
 EMAIL_USE_TLS = str(os.getenv('EMAIL_USE_TLS', 'False')) == 'True'
+
+REDIS_HOST = str(os.getenv('REDIS_HOST'))
+REDIS_PORT = str(os.getenv('REDIS_PORT'))
+BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+
+LOGGING_DIR = BASE_DIR / '../logs'
+if not os.path.exists(LOGGING_DIR):
+    os.makedirs(LOGGING_DIR)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] [{levelname}] {processName}/{threadName} {module}.{funcName}:{lineno} -> {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'celery': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOGGING_DIR / 'celery.log',
+            'formatter': 'verbose',
+            'maxBytes': 1024 * 1024 * 10,
+            'backupCount': 5,
+        },
+        'stocks': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOGGING_DIR / 'stocks.log',
+            'formatter': 'verbose',
+            'maxBytes': 1024 * 1024 * 10,
+            'backupCount': 5,
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'celery': {
+            'handlers': ['celery', 'console'],  #
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'stocks': {
+            'handlers': ['stocks', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    }
+}
