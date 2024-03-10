@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_extensions',
+
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
@@ -186,7 +188,7 @@ LOGGING = {
             'style': '{',
         },
         'simple': {
-            'format': '{levelname} {message}',
+            'format': '[{asctime}] [{levelname}] -> {message}',
             'style': '{',
         },
     },
@@ -215,7 +217,7 @@ LOGGING = {
     },
     'loggers': {
         'celery': {
-            'handlers': ['celery', 'console'],  #
+            'handlers': ['celery', 'console'],  # They are specified in the core.utils.logger file
             'level': 'INFO',
             'propagate': True,
         },
