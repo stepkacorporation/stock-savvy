@@ -217,7 +217,7 @@ LOGGING = {
     },
     'loggers': {
         'celery': {
-            'handlers': ['celery', 'console'],  # They are specified in the core.utils.logger file
+            'handlers': ['celery', 'console'],  # They are specified in the core.celery
             'level': 'INFO',
             'propagate': True,
         },

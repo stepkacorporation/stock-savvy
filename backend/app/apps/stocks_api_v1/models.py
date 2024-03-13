@@ -63,9 +63,15 @@ class Stock(models.Model):
     shortname = models.CharField(
         max_length=50,
         verbose_name='short name',
-        help_text='The short name of the instrument.'
+        help_text='The short name of the instrument.',
+        null=True,
     )
-    secname = models.CharField(max_length=50, verbose_name='secname', help_text='The name of the financial instrument.')
+    secname = models.CharField(
+        max_length=50,
+        verbose_name='secname',
+        help_text='The name of the financial instrument.',
+        null=True,
+    )
     latname = models.CharField(
         max_length=50,
         verbose_name='latname',
@@ -78,21 +84,25 @@ class Stock(models.Model):
         decimal_places=10,
         verbose_name='prevprice',
         help_text='The price of the last trade of the previous day.',
+        null=True,
     )
     lotsize = models.PositiveIntegerField(
         verbose_name='lotsize',
         help_text='The number of securities in one standard lot.',
+        null=True,
     )
     facevalue = models.DecimalField(
         max_digits=34,
         decimal_places=17,
         verbose_name='facevalue',
         help_text='The nominal value of one security at the current date.',
+        null=True,
     )
     faceunit = models.CharField(
         max_length=10,
         verbose_name='faceunit',
-        help_text='The code of the currency in which the nominal value of the security is expressed.'
+        help_text='The code of the currency in which the nominal value of the security is expressed.',
+        null=True,
     )
     status = models.CharField(
         max_length=1,
@@ -100,12 +110,14 @@ class Stock(models.Model):
         default=StatusChoices.A,
         verbose_name='status',
         help_text='The indicator "trading operations are allowed/prohibited".',
+        null=True,
     )
     decimals = models.PositiveSmallIntegerField(
         default=0,
         verbose_name='decimals',
         help_text='The number of decimal places of the fractional part of the number. '
                   'It is used to format the values of fields with the DECIMAL type.',
+        null=True,
     )
     minstep = models.DecimalField(
         max_digits=20,
@@ -113,16 +125,19 @@ class Stock(models.Model):
         verbose_name='min step',
         help_text='The minimum possible difference between the prices'
                   ' indicated in the bids for the purchase/sale of securities',
+        null=True,
     )
     prevdate = models.DateField(verbose_name='prevdate', help_text='The date of the previous trading day.', null=True)
     issuesize = models.PositiveBigIntegerField(
         verbose_name='issuesize',
         help_text='The number of securities in the issue.',
+        null=True,
     )
     isin = models.CharField(
         max_length=20,
         verbose_name='isin',
-        help_text='The international identification code of the security.'
+        help_text='The international identification code of the security.',
+        null=True,
     )
     regnumber = models.CharField(
         max_length=50,
@@ -139,26 +154,34 @@ class Stock(models.Model):
                   "accordance with the trading rules as the weighted average price "
                   "of transactions for the last 10 minutes of the main session, including "
                   "transactions of the post-trading period or the closing auction.",
+        null=True,
     )
     currencyid = models.CharField(
         max_length=10,
         verbose_name='currency ID',
-        help_text='The currency of settlement for the instrument.'
+        help_text='The currency of settlement for the instrument.',
+        null=True,
     )
     sectype = models.CharField(
         max_length=1,
         choices=SecTypeChoices,
         default=SecTypeChoices.FIRST,
         verbose_name='sectype',
-        help_text='The type of security.'
+        help_text='The type of security.',
+        null=True,
     )
     listlevel = models.PositiveSmallIntegerField(
         choices=ListLevelChoices,
         default=ListLevelChoices.FIRST,
         verbose_name='listlevel',
-        help_text='The listing level.'
+        help_text='The listing level.',
+        null=True,
     )
-    settledate = models.DateField(verbose_name='settledate', help_text='Settlement date of the transaction.')
+    settledate = models.DateField(
+        verbose_name='settledate',
+        help_text='Settlement date of the transaction.',
+        null=True,
+    )
 
     updated = models.DateTimeField(auto_now=True, verbose_name='updated')
 
@@ -176,7 +199,7 @@ class Candle(models.Model):
     Represents a candlestick of historical price data for a stock.
     """
 
-    stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name='candles', verbose_name='stock ID')
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name='candles', verbose_name='stock')
     open = models.DecimalField(
         max_digits=36,
         decimal_places=18,
@@ -225,3 +248,27 @@ class Candle(models.Model):
     class Meta:
         verbose_name = 'candle'
         verbose_name_plural = 'candles'
+
+
+class Dividend(models.Model):
+    """
+    Represents a dividend payment.
+    """
+
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name='dividends', verbose_name='stock')
+    value = models.DecimalField(
+        verbose_name='payment',
+        max_digits=36,
+        decimal_places=18,
+        help_text='The amount of the dividend payment.',
+    )
+    registryclosedate = models.DateField(verbose_name='payment date', help_text='The date of payment of dividends.')
+
+    def __str__(self):
+        return f'{self.stock.shortname} ({self.stock.ticker}) ' \
+               f'{self.registryclosedate}{self.stock.currencyid} {self.value}'
+
+    class Meta:
+        verbose_name = 'dividend'
+        verbose_name_plural = 'dividends'
+        ordering = ('-registryclosedate',)
