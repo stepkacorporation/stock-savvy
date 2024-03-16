@@ -1,14 +1,19 @@
 import os
-import celery.signals
 import logging
 
 from logging.handlers import RotatingFileHandler
+
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+
+from celery import Celery
 from celery.schedules import crontab
+from celery.signals import after_setup_logger, task_failure
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
-app = celery.Celery('stocks', broker_connection_retry=False, broker_connection_retry_on_startup=True)
+app = Celery('stocks', broker_connection_retry=False, broker_connection_retry_on_startup=True)
 app.config_from_object('django.conf:settings')
 
 app.autodiscover_tasks()
@@ -21,7 +26,24 @@ app.conf.beat_schedule = {
 }
 
 
-@celery.signals.after_setup_logger.connect
+@task_failure.connect
+def handle_task_failure(task_id, exception, args, kwargs, traceback, einfo, **kw):
+    """
+    The Celery task error handler.
+    Sends an error notification to the site administrators.
+    """
+
+    UserModel = get_user_model()
+    admins = UserModel.objects.filter(is_admin=True)
+
+    subject = 'Error in Celery task'
+    message = f'An error occurred in Celery task[{task_id}]: {exception}\n\n{einfo}'
+
+    for admin in admins:
+        send_mail(subject, message, None, [admin.email])
+
+
+@after_setup_logger.connect
 def after_setup_celery_logger(logger, **kwargs):
     """Adds a file logger setup function to the Celery logger after setup signal."""
 
