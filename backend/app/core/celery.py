@@ -4,6 +4,7 @@ import logging
 
 from logging.handlers import RotatingFileHandler
 from django.conf import settings
+from celery.schedules import crontab
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
@@ -11,6 +12,13 @@ app = celery.Celery('stocks', broker_connection_retry=False, broker_connection_r
 app.config_from_object('django.conf:settings')
 
 app.autodiscover_tasks()
+
+app.conf.beat_schedule = {
+    'update-available-stocks-every-day': {
+        'task': 'apps.stocks_api_v1.tasks.load_available_stocks',
+        'schedule': crontab(),
+    },
+}
 
 
 @celery.signals.after_setup_logger.connect

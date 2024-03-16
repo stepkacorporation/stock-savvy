@@ -1,10 +1,10 @@
 from django.core.management.base import BaseCommand
 
-from ...tasks import load_stock_data
+from ...tasks import load_available_stocks
 
 
 class Command(BaseCommand):
     help = 'Loads stock data into the database from an external API.'
 
     def handle(self, *args, **options):
-        load_stock_data()
+        load_available_stocks.delay()
