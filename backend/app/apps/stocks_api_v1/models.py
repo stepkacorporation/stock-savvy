@@ -57,7 +57,7 @@ class Stock(models.Model):
         SECOND = 2, 'Second'
         THIRD = 3, 'Third'
 
-    ticker = models.CharField(max_length=10, verbose_name='ticker', help_text='The ticker of the stock.', unique=True)
+    ticker = models.CharField(primary_key=True, max_length=10, verbose_name='ticker', help_text='The ticker of the stock.')
     shortname = models.CharField(
         max_length=50,
         verbose_name='short name',
@@ -190,3 +190,8 @@ class Stock(models.Model):
         ordering = ('ticker',)
         verbose_name = 'stock'
         verbose_name_plural = 'stocks'
+
+    def save(self, *args, **kwargs):
+        if self.ticker:
+            self.ticker = self.ticker.upper()
+        super().save(*args, **kwargs)
